@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import styles from '../styles/Home.module.css';
 
 export default function CotacaoForm() {
   const [startDate, setStartDate] = useState('');
@@ -28,7 +29,7 @@ export default function CotacaoForm() {
       if (!res.ok) throw new Error('Erro ao buscar cotações.');
 
       const dados = await res.json();
-      setCotacoes(dados.reverse()); // Mostra da mais antiga para a mais nova
+      setCotacoes(dados.reverse());
     } catch (err) {
       setError(err.message || 'Erro desconhecido.');
     } finally {
@@ -37,49 +38,49 @@ export default function CotacaoForm() {
   };
 
   return (
-    <main style={{ padding: '2rem', fontFamily: 'Arial' }}>
-      <h1>Buscar Cotação USD/BRL</h1>
+    <main className={styles.main}>
+      <div className={styles.formContainer}>
+        <h1 className={styles.title}>Buscar Cotação USD/BRL</h1>
 
-      <div style={{ marginBottom: '1rem' }}>
-        <label>
+        <label className={styles.label}>
           Data Início:
           <input
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            style={{ marginLeft: '1rem' }}
+            className={styles.input}
           />
         </label>
-        <br /><br />
-        <label>
+
+        <label className={styles.label}>
           Data Fim:
           <input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            style={{ marginLeft: '1.9rem' }}
+            className={styles.input}
           />
         </label>
-        <br /><br />
-        <button onClick={buscarCotacoes} style={{ padding: '0.5rem 1rem' }}>
+
+        <button onClick={buscarCotacoes} className={styles.button}>
           Buscar
         </button>
+
+        {loading && <p className={styles.loading}>Carregando...</p>}
+        {error && <p className={styles.error}>{error}</p>}
       </div>
 
-      {loading && <p>Carregando...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-
       {cotacoes.length > 0 && (
-        <div>
-          <h2>Resultados:</h2>
-          <ul>
+        <div className={styles.resultBox}>
+          <h2 className={styles.subtitle}>Resultados:</h2>
+          <ul className={styles.resultList}>
             {cotacoes.map((item, index) => (
-              <li key={index} style={{ marginBottom: '1rem' }}>
-                <strong>Data:</strong> {new Date(item.timestamp * 1000).toLocaleDateString()}<br />
-                <strong>Compra:</strong> R$ {item.bid}<br />
-                <strong>Venda:</strong> R$ {item.ask}<br />
-                <strong>Alta:</strong> R$ {item.high}<br />
-                <strong>Baixa:</strong> R$ {item.low}<br />
+              <li key={index} className={styles.resultItem}>
+                <p><strong>Data:</strong> {new Date(item.timestamp * 1000).toLocaleDateString()}</p>
+                <p><strong>Compra:</strong> R$ {item.bid}</p>
+                <p><strong>Venda:</strong> R$ {item.ask}</p>
+                <p><strong>Alta:</strong> R$ {item.high}</p>
+                <p><strong>Baixa:</strong> R$ {item.low}</p>
               </li>
             ))}
           </ul>
